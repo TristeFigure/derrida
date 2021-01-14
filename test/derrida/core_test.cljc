@@ -2,7 +2,7 @@
   (:require [clojure.test :refer [deftest testing is are]]
             [clojure.set  :refer [difference]]
             [derrida.core :refer [entangle disentangle deconstruct restructure
-                                  efface efface-except]]))
+                                  efface efface-except destructuring-form?]]))
 
 (deftest test-disentangle-entangle
   (are [x y z] (and (= x (disentangle y))
@@ -124,3 +124,24 @@
        ;;   edge cases
        '{a :a}           '[]     '{a :a}
        '{a :a}           nil     '{a :a}))
+
+(deftest test-destructuring-form?
+  (are [x y] (is (= y (destructuring-form? x)))
+
+       ;; When the form is not a coll
+       1                    false
+       "abc"                false
+       (Object.)            false
+
+       ;; When the form is a symbol
+       'a                   true
+
+       ;; When the form is a valid binding form
+       []                   true
+       {}                   true
+       '[a & {:keys [b]}]   true
+
+       ;; When the form is an invalid binding form
+       #{}                  false
+       '[& a b]             false
+       '{:keys [a] :oops b} false))

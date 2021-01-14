@@ -11,7 +11,7 @@
 # Usage
 
 ```clojure
-[derrida "0.1.0"]
+[derrida "0.1.1"]
 ```
 
 
@@ -89,8 +89,13 @@ Removes given symbols from a binding form.
 
 Similarly to `efface`, removes all but the given syms from the binding form.
 
+### `destructuring-form?`
 
-## License
+Decides on whether `form` is a destructuring or binding form using Clojure official [clojure.core.specs.alpha](https://github.com/clojure/core.specs.alpha)/`binding-form` spec.
+
+
+## 
+License
 
 Copyright © 2021 TristeFigure
 

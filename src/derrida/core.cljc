@@ -1,7 +1,9 @@
 (ns derrida.core
   "### Destructuring Destructuring"
-  (:require [clojure.walk :refer [prewalk]]
-            [clojure.set  :refer [difference intersection]]))
+  (:require [clojure.walk             :refer [prewalk]]
+            [clojure.set              :refer [difference intersection]]
+            [clojure.spec.alpha       :as s]
+            [clojure.core.specs.alpha :as ss]))
 
 (declare disentangle)
 
@@ -216,3 +218,12 @@
   [binding-form & syms]
   (apply efface binding-form (difference (set (deconstruct binding-form))
                                          (set (flatten syms)))))
+
+(defn destructuring-form?
+  "Decides on whether `form` is a destructuring or binding form using Clojure
+  official clojure.core.specs.alpha/binding-form` spec."
+  [form]
+  (let [result (s/conform ::ss/binding-form form)]
+    (if (= result ::s/invalid)
+      false
+      true)))
