@@ -5,7 +5,7 @@
 ― Jacques Derrida, Margins of Philosophy
 
 <p align="center">
-  <img src="https://cdn.radiofrance.fr/s3/cruiser-production/2016/01/73c607cd-7620-4e15-b745-f93f249c6185/838_derrida_1.webp">
+  <img src="https://raw.githubusercontent.com/TristeFigure/derrida/master/doc/derrida.webp">
 </p>
 
 # Usage
