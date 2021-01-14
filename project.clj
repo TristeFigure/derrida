@@ -41,6 +41,7 @@
   :aliases {"test"    ["with-profile" "test" ["do" ["test"] ["doo" "once"]]]
             "deploy"  ["with-profile" "release" "deploy"]
             "release" ["with-profile" "release" "release"]}
-  :codox {:source-uri "https://github.com/TristeFigure/derrida/blob/{version}/{filepath}#L{line}"
-          :metadata   {:doc/format :markdown}
-          :themes     [:rdash]})
+  :codox {:output-path "codox"
+          :source-uri  "https://github.com/TristeFigure/derrida/blob/{version}/{filepath}#L{line}"
+          :metadata    {:doc/format :markdown}
+          :themes      [:rdash]})
