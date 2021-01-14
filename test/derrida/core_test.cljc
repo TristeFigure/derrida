@@ -1,8 +1,13 @@
 (ns derrida.core-test
-  (:require [clojure.test :refer [deftest testing is are]]
-            [clojure.set  :refer [difference]]
-            [derrida.core :refer [entangle disentangle deconstruct restructure
-                                  efface efface-except destructuring-form?]]))
+  (:require [clojure.test                    :refer [deftest testing is are]]
+            [clojure.set                     :refer [difference]]
+            [derrida.core                    :refer [entangle disentangle
+                                                     deconstruct restructure
+                                                     efface efface-except
+                                                     destructuring-form?]]
+    #?(:clj [net.cgrand.macrovich            :as macros]))
+  #?(:cljs
+      (:require-macros [net.cgrand.macrovich :as macros])))
 
 (deftest test-disentangle-entangle
   (are [x y z] (and (= x (disentangle y))
@@ -125,23 +130,23 @@
        '{a :a}           '[]     '{a :a}
        '{a :a}           nil     '{a :a}))
 
-(deftest test-destructuring-form?
-  (are [x y] (is (= y (destructuring-form? x)))
+(macros/deftime
+  (deftest test-destructuring-form?
+    (are [x y] (is (= y (destructuring-form? x)))
 
-       ;; When the form is not a coll
-       1                    false
-       "abc"                false
-       (Object.)            false
+         ;; When the form is not a coll
+         1                    false
+         "abc"                false
 
-       ;; When the form is a symbol
-       'a                   true
+         ;; When the form is a symbol
+         'a                   true
 
-       ;; When the form is a valid binding form
-       []                   true
-       {}                   true
-       '[a & {:keys [b]}]   true
+         ;; When the form is a valid binding form
+         []                   true
+         {}                   true
+         '[a & {:keys [b]}]   true
 
-       ;; When the form is an invalid binding form
-       #{}                  false
-       '[& a b]             false
-       '{:keys [a] :oops b} false))
+         ;; When the form is an invalid binding form
+         #{}                  false
+         '[& a b]             false
+         '{:keys [a] :oops b} false)))

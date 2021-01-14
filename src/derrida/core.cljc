@@ -1,9 +1,12 @@
 (ns derrida.core
   "### Destructuring Destructuring"
-  (:require [clojure.walk             :refer [prewalk]]
-            [clojure.set              :refer [difference intersection]]
-            [clojure.spec.alpha       :as s]
-            [clojure.core.specs.alpha :as ss]))
+  (:require [clojure.walk                   :refer [prewalk]]
+            [clojure.set                    :refer [difference intersection]]
+            [clojure.spec.alpha             :as s]
+            [clojure.core.specs.alpha       :as ss]
+    #?(:clj [net.cgrand.macrovich           :as macros]))
+  #?(:cljs
+      (:require-macros [net.cgrand.macrovich :as macros])))
 
 (declare disentangle)
 
@@ -47,7 +50,9 @@
     (  disentangle-sequential  binding-form)
     (map? binding-form)
     (  disentangle-associative binding-form)
-    :else (throw (Exception. (str "Cannot disentangle " binding-form)))))
+    :else (throw (ex-info (str "Cannot disentangle " binding-form)
+                          {:type ::cannot-disentangle
+                           :form binding-form}))))
 
 (defn- entangle-sequential [m]
   (vec (concat (:items m)
@@ -219,11 +224,12 @@
   (apply efface binding-form (difference (set (deconstruct binding-form))
                                          (set (flatten syms)))))
 
-(defn destructuring-form?
-  "Decides on whether `form` is a destructuring or binding form using Clojure
-  official clojure.core.specs.alpha/binding-form` spec."
-  [form]
-  (let [result (s/conform ::ss/binding-form form)]
-    (if (= result ::s/invalid)
-      false
-      true)))
+(macros/deftime
+  (defn destructuring-form?
+    "Decides on whether `form` is a destructuring or binding form using Clojure
+    official clojure.core.specs.alpha/binding-form` spec."
+    [form]
+    (let [result (s/conform ::ss/binding-form form)]
+      (if (= result ::s/invalid)
+        false
+        true))))
